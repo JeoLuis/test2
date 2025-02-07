@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bumble Match Message</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #ffdc4d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .phone {
+            width: 320px;
+            height: 550px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile {
+            width: 100%;
+            height: 70%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .info h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .bio {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+        }
+
+        .btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn.no {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .btn.yes {
+            background: #34c759;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Match Screen */
+        .match-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .match-screen h2 {
+            font-size: 24px;
+            color: #ffdc4d;
+            font-weight: bold;
+        }
+
+        .timer {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        /* Message Screen */
+        .message-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message-box {
+            max-height: 60%;
+            overflow-y: auto;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fffbeb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .couple-image {
+            width: 80%;
+            max-width: 200px;
+            margin-top: 20px;
+            border-radius: 15px;
+        }
+
+        .love-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ffdc4d;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Left swipe screen */
+        .left-swipe-screen {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .left-swipe-screen h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .try-again-btn {
+            background-color: #ffdc4d;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone">
+        <!-- Profile Card -->
+        <div class="profile">
+            <img src="jeo.jpg" alt="Profile">
+        </div>
+        <div class="info">
+            <h2>Bebu, 24</h2>
+            <p class="bio">🏋️ Gym • 🏸 Badminton • 🎮 Programmer </p>
+        </div>
+        <div class="buttons">
+            <button class="btn no" onclick="leftSwipe()">❌</button>
+            <button class="btn yes" onclick="matchFound()">✔️</button>
+        </div>
+
+        <!-- Left Swipe Screen -->
+        <div class="left-swipe-screen" id="leftSwipeScreen">
+            <h2>Why did you swipe me left, Bebu?</h2>
+            <button class="try-again-btn" onclick="resetScreen()">Try Again</button>
+        </div>
+
+        <!-- Match Screen -->
+        <div class="match-screen" id="matchScreen">
+            <h2>What A Match! ❤️</h2>
+            <div class="timer" id="timer">Loading next part in 5 seconds...</div>
+        </div>
+
+        <!-- Message Screen -->
+        <div class="message-screen" id="messageScreen">
+            <div class="message-box">
+                Hello Bebu! Swiping right was the best decision I have ever made.  
+                When I installed Bumble, I didn’t expect much since most people there  
+                are just for fun. But in just one day, I found my best partner and  
+                love of my life. ❤️  
+
+                I wouldn’t be who I am now without you, even though we’ve only  
+                been talking for a month. You’ve made me feel loved, cared for,  
+                and happier than ever. Our Discord nights may seem simple,  
+                but talking to you is like therapy. When you share your day with me,  
+                I see the excitement in your voice, and it makes my heart so full.  
+
+                You motivate me to be the best version of myself. Even when I feel  
+                lazy, you push me to go to the gym, to work harder, and to dream bigger.  
+                I know we still have a long way to go, but I love how we’re slowly  
+                building our future together.  
+
+                I am thankful for you, for every moment we share, for every "good  
+                morning" and "good night," and for the love we have. If only you  
+                could see yourself through my eyes—you would see a wonderful,  
+                caring, and incredible person that I want to be with forever.  
+
+                I love you so much, my Bebu. To forever? 💛  
+            </div>
+
+            <img src="pic.jpg" alt="Cute Couple" class="couple-image">
+            <div class="love-text">You're my best match. 💕</div>
+            <button class="back-btn" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <script>
+        function matchFound() {
+            document.querySelector('.match-screen').style.display = 'flex';
+            document.querySelector('.buttons').style.display = 'none';
+            let timeLeft = 5;
+            let timerInterval = setInterval(function () {
+                document.getElementById("timer").textContent = `Loading next part in ${timeLeft} seconds...`;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    document.querySelector('.match-screen').style.display = 'none';
+                    document.querySelector('.message-screen').style.display = 'flex';
+                }
+            }, 1000);
+        }
+
+        function goBack() {
+            document.querySelector('.message-screen').style.display = 'none';
+            document.querySelector('.buttons').style.display = 'flex';
+        }
+
+        function leftSwipe() {
+            document.querySelector('.left-swipe-screen').style.display = 'block';
+            document.querySelector('.buttons').style.display = 'none';
+        }
+
+        function resetScreen() {
+            document.querySelector('.left-swipe-screen').style.display = 'none';
+            document.querySelector('.buttons').style.display = 'flex';
+        }
+    </script>
+
+</body>
+</html>
